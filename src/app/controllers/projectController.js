@@ -50,7 +50,18 @@ router.put('/:projectId', async (req, res) => {
 
 //Rota para deleta projetos e tarefas
 router.delete('/:projectId', async (req, res) => {
-  res.send({ user: req.userId });
+  try {
+    await Project.findByIdAndRemove(
+      req.params.projectId, 
+      { 
+        new: true, 
+        useFindAndModify: false,
+    });
+
+    return res.send();
+  } catch (err) {
+    return res.status(400).send({ error: 'Error deleting project' });
+  }
 });
 
 module.exports = app => app.use('/projects', router);
