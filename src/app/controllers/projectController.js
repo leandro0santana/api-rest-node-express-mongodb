@@ -11,18 +11,30 @@ router.use(authMiddleware);
 
 //Rota para listagem de todos os projetos e tarefas.
 router.get('/', async (req, res) => {
-  res.send({ user: req.userId });
+  try {
+    const projects = await Project.find().populate('user');
+
+    return res.send({ projects });
+  } catch (err) {
+    return res.status(400).send({ error: 'Error loading projects' });
+  }
 });
 
 //Rota para listagem de projetos e tarefas por id de usuário
 router.get('/:projectId', async (req, res) => {
-  res.send({ user: req.userId });
+  try {
+    const project = await Project.findById(req.params.projectId).populate('user');
+
+    return res.send({ project });
+  } catch (err) {
+    return res.status(400).send({ error: 'Error loading project' });
+  }
 });
 
 //Rota para criação de projetos e tarefas
 router.post('/', async (req, res) => {
   try {
-    const project = await Project.create(req.body);
+    const project = await Project.create({...req.body, user: req.userId });
 
     return res.send({ project });
 

@@ -13,7 +13,7 @@ const ProjectSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    require: true,
   },
   tasks: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -22,9 +22,11 @@ const ProjectSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
-
-});
+  }},
+  {
+    usePushEach: true,
+  }
+);
 
 const Project = mongoose.model('Project', ProjectSchema);
 
